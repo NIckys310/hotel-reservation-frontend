@@ -1,10 +1,11 @@
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '');
 const BASE = `${API_URL}/api/hotel`;
+const AUTH = `${API_URL}/api/auth`;
 
-async function request(path, options = {}) {
+async function request(path, options = {}, base = BASE) {
   let response;
   try {
-    response = await fetch(`${BASE}${path}`, {
+    response = await fetch(`${base}${path}`, {
       headers: { 'Content-Type': 'application/json' },
       ...options,
     });
@@ -36,4 +37,11 @@ export const hotelApi = {
   getReservation: (reservationId) => request(`/reserva/${encodeURIComponent(reservationId)}`),
   getReservations: () => request('/reservas'),
   getServiceCatalog: () => request('/servicios'),
+};
+
+export const authApi = {
+  login: (username, password) =>
+    request('/login', { method: 'POST', body: JSON.stringify({ username, password }) }, AUTH),
+  register: (fullName, username, password) =>
+    request('/register', { method: 'POST', body: JSON.stringify({ fullName, username, password }) }, AUTH),
 };
