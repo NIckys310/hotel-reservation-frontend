@@ -7,7 +7,7 @@ export default function RoomList({ rooms, selectedRoom, onSelect }) {
     return <p className="empty">Elige tus fechas y pulsa “Buscar disponibilidad” para ver las habitaciones.</p>;
   }
   if (rooms.length === 0) {
-    return <p className="empty">No hay habitaciones de ese tipo.</p>;
+    return <p className="empty">No hay habitaciones que coincidan con el tipo y el rango de precio elegidos.</p>;
   }
   const availableCount = rooms.filter((room) => room.available).length;
 

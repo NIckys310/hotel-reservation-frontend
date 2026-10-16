@@ -42,6 +42,39 @@ export default function SearchForm({ search, onChange, onSubmit, loading, today 
           ))}
         </select>
       </div>
+      <div className="field price-field">
+        <label htmlFor="minPrice">Precio por noche (US$)</label>
+        <div className="price-range">
+          <input
+            id="minPrice"
+            type="number"
+            min="0"
+            step="10"
+            placeholder="Mín."
+            value={search.minPrice}
+            onChange={update('minPrice')}
+          />
+          <span aria-hidden="true">–</span>
+          <input
+            id="maxPrice"
+            type="number"
+            min="0"
+            step="10"
+            placeholder="Máx."
+            aria-label="Precio máximo por noche"
+            value={search.maxPrice}
+            onChange={update('maxPrice')}
+          />
+        </div>
+      </div>
+      <div className="field">
+        <label htmlFor="sort">Ordenar por</label>
+        <select id="sort" value={search.sort} onChange={update('sort')}>
+          <option value="number">Número de habitación</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+        </select>
+      </div>
       <button type="submit" className="btn btn-primary" disabled={loading}>
         {loading ? 'Buscando…' : 'Buscar disponibilidad'}
       </button>

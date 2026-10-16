@@ -20,9 +20,11 @@ async function request(path, options = {}, base = BASE) {
 }
 
 export const hotelApi = {
-  checkAvailability: (checkIn, checkOut, type) => {
+  checkAvailability: (checkIn, checkOut, type, minPrice, maxPrice) => {
     const params = new URLSearchParams({ checkIn, checkOut });
     if (type) params.append('type', type);
+    if (minPrice !== '' && minPrice != null) params.append('minPrice', minPrice);
+    if (maxPrice !== '' && maxPrice != null) params.append('maxPrice', maxPrice);
     return request(`/disponibilidad?${params}`);
   },
   createReservation: (reservation) =>
