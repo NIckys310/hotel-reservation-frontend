@@ -5,11 +5,31 @@ import RoomList from './components/RoomList';
 import PricePreview from './components/PricePreview';
 import ReservationForm from './components/ReservationForm';
 import ReservationPanel from './components/ReservationPanel';
+import LoginPage from './components/LoginPage';
 import { STATUS_LABELS, addDays, formatDate, toIsoDate } from './utils/format';
 
 const today = toIsoDate(new Date());
+const SESSION_KEY = 'hotel-session';
+
+const loadSession = () => {
+  try {
+    return JSON.parse(localStorage.getItem(SESSION_KEY));
+  } catch {
+    return null;
+  }
+};
+
+const saveSession = (user) => {
+  try {
+    if (user) localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    else localStorage.removeItem(SESSION_KEY);
+  } catch {
+    // Storage may be unavailable (private mode); the session then lasts until reload.
+  }
+};
 
 export default function App() {
+  const [user, setUser] = useState(loadSession);
   const [tab, setTab] = useState('book');
   const [search, setSearch] = useState({ checkIn: today, checkOut: addDays(today, 2), type: '' });
   const [rooms, setRooms] = useState(null);
@@ -24,8 +44,8 @@ export default function App() {
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
-    hotelApi.getServiceCatalog().then(setCatalog).catch((e) => setError(e.message));
-  }, []);
+    if (user) hotelApi.getServiceCatalog().then(setCatalog).catch((e) => setError(e.message));
+  }, [user]);
 
   const refreshReservations = useCallback(() => {
     hotelApi.getReservations().then(setReservations).catch(() => {});
@@ -97,11 +117,36 @@ export default function App() {
     refreshReservations();
   };
 
+  const login = (loggedUser) => {
+    saveSession(loggedUser);
+    setUser(loggedUser);
+  };
+
+  const logout = () => {
+    saveSession(null);
+    setUser(null);
+    setReservation(null);
+    setRooms(null);
+    setTab('book');
+  };
+
+  if (!user) {
+    return <LoginPage onLogin={login} />;
+  }
+
   return (
     <>
       <header className="hero">
         <div className="container">
-          <p className="eyebrow">Hotel Fachada · Reservas en línea</p>
+          <div className="topbar">
+            <p className="eyebrow">Hotel Fachada · Reservas en línea</p>
+            <div className="user-box">
+              <span>Hola, {user.fullName}</span>
+              <button type="button" className="btn btn-ghost-light" onClick={logout}>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
           <h1>Sistema de Reservas de Hotel</h1>
           <p className="lead">
             Busca habitaciones por fecha, reserva en minutos y gestiona tu estadía: servicios, check-in, check-out y
