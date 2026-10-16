@@ -27,7 +27,10 @@ export default function ReservationPanel({ reservation, catalog, onUpdate, onErr
 
   return (
     <div className="panel">
-      <section className="card">
+      <section className="card panel-main">
+        {reservation.room.imageUrl && (
+          <img className="panel-photo" src={reservation.room.imageUrl} alt={reservation.room.name} />
+        )}
         <div className="panel-header">
           <div>
             <span className="muted small">Código de reserva</span>
@@ -56,10 +59,11 @@ export default function ReservationPanel({ reservation, catalog, onUpdate, onErr
           <div>
             <span className="muted small">Habitación</span>
             <p>
-              {reservation.room.type === 'SINGLE' ? 'Sencilla' : reservation.room.type === 'DOUBLE' ? 'Doble' : 'Suite'}{' '}
-              {reservation.room.number}
+              {reservation.room.name} · {reservation.room.number}
             </p>
-            <p className="muted small">{reservation.numberOfGuests} huésped(es)</p>
+            <p className="muted small">
+              {reservation.room.sizeM2} m² · {reservation.room.bedType} · {reservation.numberOfGuests} huésped(es)
+            </p>
           </div>
           <div>
             <span className="muted small">Estadía</span>

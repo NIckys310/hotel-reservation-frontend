@@ -1,7 +1,5 @@
 import { formatMoney } from '../utils/format';
 
-const TYPE_ICONS = { SINGLE: '🛏️', DOUBLE: '🛏️🛏️', SUITE: '👑' };
-
 export default function RoomList({ rooms, selectedRoom, onSelect }) {
   if (!rooms) {
     return <p className="empty">Elige tus fechas y pulsa “Buscar disponibilidad” para ver las habitaciones.</p>;
@@ -31,26 +29,41 @@ export default function RoomList({ rooms, selectedRoom, onSelect }) {
               onClick={() => onSelect(room)}
               aria-pressed={selected}
             >
-              <div className="room-top">
-                <span className="room-number">Hab. {room.number}</span>
+              <div className="room-photo">
+                <img src={room.imageUrl} alt={`${room.name}, habitación ${room.number}`} loading="lazy" />
                 <span className={`badge ${room.available ? 'badge-ok' : 'badge-busy'}`}>
                   {room.available ? 'Disponible' : 'No disponible'}
                 </span>
+                <span className="room-tag">{room.typeLabel}</span>
               </div>
-              <div className="room-type">
-                <span aria-hidden="true">{TYPE_ICONS[room.type]}</span> {room.typeLabel}
-              </div>
-              <p className="room-desc">{room.description}</p>
-              <div className="room-meta">
-                <span>Piso {room.floor}</span>
-                <span>Hasta {room.capacity} huésped(es)</span>
-              </div>
-              <div className="room-price">
-                <strong>{formatMoney(room.quote.total)}</strong>
-                <span className="muted">
-                  {' '}
-                  · {room.quote.nights} noche(s)
-                </span>
+              <div className="room-body">
+                <div className="room-top">
+                  <span className="room-type">{room.name}</span>
+                  <span className="room-number">Hab. {room.number}</span>
+                </div>
+                <p className="room-desc">{room.description}</p>
+                <ul className="room-facts">
+                  <li>📐 {room.sizeM2} m²</li>
+                  <li>🛏️ {room.bedType}</li>
+                  <li>🌅 Vista {room.view.toLowerCase()}</li>
+                  <li>👤 Hasta {room.capacity}</li>
+                  <li>🏢 Piso {room.floor}</li>
+                </ul>
+                <ul className="amenities">
+                  {room.amenities.slice(0, 4).map((amenity) => (
+                    <li key={amenity}>{amenity}</li>
+                  ))}
+                  {room.amenities.length > 4 && <li>+{room.amenities.length - 4} más</li>}
+                </ul>
+                <div className="room-price">
+                  <div>
+                    <strong>{formatMoney(room.quote.averageNightlyPrice)}</strong>
+                    <span className="muted"> / noche</span>
+                  </div>
+                  <span className="muted small">
+                    Total {formatMoney(room.quote.total)} · {room.quote.nights} noche(s)
+                  </span>
+                </div>
               </div>
             </button>
           );

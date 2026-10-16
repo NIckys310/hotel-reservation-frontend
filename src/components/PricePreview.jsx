@@ -18,10 +18,16 @@ export default function PricePreview({ room, catalog, selectedServices, onToggle
 
   return (
     <aside className="card preview">
+      <img className="preview-photo" src={room.imageUrl} alt={room.name} />
       <h3>Resumen de precio</h3>
       <p className="preview-room">
-        Habitación {room.typeLabel} {room.number}
+        {room.name} · Hab. {room.number}
       </p>
+      <ul className="amenities preview-amenities">
+        {room.amenities.map((amenity) => (
+          <li key={amenity}>{amenity}</li>
+        ))}
+      </ul>
       <p className="muted small">
         {formatDate(quote.checkIn)} → {formatDate(quote.checkOut)} · {quote.nights} noche(s)
       </p>
