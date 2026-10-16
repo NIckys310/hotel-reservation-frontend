@@ -28,10 +28,23 @@ const saveSession = (user) => {
   }
 };
 
+const sortRooms = (rooms, sort) => {
+  if (!rooms || sort === 'number') return rooms;
+  const direction = sort === 'price-asc' ? 1 : -1;
+  return [...rooms].sort((a, b) => direction * (a.quote.averageNightlyPrice - b.quote.averageNightlyPrice));
+};
+
 export default function App() {
   const [user, setUser] = useState(loadSession);
   const [tab, setTab] = useState('book');
-  const [search, setSearch] = useState({ checkIn: today, checkOut: addDays(today, 2), type: '' });
+  const [search, setSearch] = useState({
+    checkIn: today,
+    checkOut: addDays(today, 2),
+    type: '',
+    minPrice: '',
+    maxPrice: '',
+    sort: 'number',
+  });
   const [rooms, setRooms] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedServices, setSelectedServices] = useState([]);
@@ -61,7 +74,12 @@ export default function App() {
     setNotice('');
     setSelectedRoom(null);
     try {
-      setRooms(await hotelApi.checkAvailability(search.checkIn, search.checkOut, search.type));
+      if (search.minPrice !== '' && search.maxPrice !== '' && Number(search.minPrice) > Number(search.maxPrice)) {
+        throw new Error('El precio mínimo no puede ser mayor que el máximo.');
+      }
+      setRooms(
+        await hotelApi.checkAvailability(search.checkIn, search.checkOut, search.type, search.minPrice, search.maxPrice),
+      );
     } catch (e) {
       setError(e.message);
     } finally {
@@ -187,7 +205,7 @@ export default function App() {
             <div className="booking-layout">
               <div>
                 <RoomList
-                  rooms={rooms}
+                  rooms={sortRooms(rooms, search.sort)}
                   selectedRoom={selectedRoom}
                   onSelect={(room) => {
                     setSelectedRoom(room);

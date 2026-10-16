@@ -94,7 +94,7 @@ input:focus, select:focus { outline: 2px solid var(--gold); outline-offset: 1px;
 
 .search-form {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) auto;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   align-items: end;
   margin-bottom: 1.5rem;
@@ -243,3 +243,6 @@ th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: u
 .switch-mode { text-align: center; font-size: 0.9rem; }
 .link-button { background: none; border: 0; color: var(--navy); font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 0; }
 .demo-hint { text-align: center; font-size: 0.8rem; color: var(--muted); background: var(--gold-soft); border-radius: 8px; padding: 0.5rem; }
+
+.price-range { display: flex; align-items: center; gap: 0.4rem; }
+.price-range input { width: 100%; }
