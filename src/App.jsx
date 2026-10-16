@@ -6,6 +6,8 @@ import PricePreview from './components/PricePreview';
 import ReservationForm from './components/ReservationForm';
 import ReservationPanel from './components/ReservationPanel';
 import LoginPage from './components/LoginPage';
+import Experiences from './components/Experiences';
+import { HERO_IMAGE } from './utils/images';
 import { STATUS_LABELS, addDays, formatDate, toIsoDate } from './utils/format';
 
 const today = toIsoDate(new Date());
@@ -154,7 +156,7 @@ export default function App() {
 
   return (
     <>
-      <header className="hero">
+      <header className="hero" style={{ backgroundImage: `linear-gradient(120deg, rgba(20, 33, 61, 0.92), rgba(20, 33, 61, 0.55)), url(${HERO_IMAGE})` }}>
         <div className="container">
           <div className="topbar">
             <p className="eyebrow">Hotel Fachada · Reservas en línea</p>
@@ -226,6 +228,7 @@ export default function App() {
                 onToggleService={toggleService}
               />
             </div>
+            <Experiences catalog={catalog} />
           </>
         )}
 
